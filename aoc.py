@@ -14,19 +14,15 @@ def find_total(puzzle_input, steps=1):
     total = 0
     steps = steps % (len(puzzle_input)-1)
     for i, digit in enumerate(puzzle_input):
+        to_compare_index = (i + steps) % (len(puzzle_input) - 1)
         if digit == "\n" or digit == "\r":
             break
-        elif (i + steps) > (len(puzzle_input) - 2):
-            to_compare_index = (i + steps) % (len(puzzle_input)-1)
-            if digit == puzzle_input[to_compare_index]:
-                total += int(digit)
-        elif puzzle_input[i + steps] == "\n" or puzzle_input[i + steps] == "\r":
+        elif puzzle_input[to_compare_index] == "\n" or puzzle_input[to_compare_index] == "\r":
             if digit == puzzle_input[0]:
                 total += int(digit)
-        elif digit == puzzle_input[i + steps]:
+        elif digit == puzzle_input[to_compare_index]:
             total += int(digit)
     return total
-
 
 def main():
     with open(f"{YEAR}/{DAY}/input.txt") as f:
