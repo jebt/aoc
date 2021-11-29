@@ -13,11 +13,9 @@ def puzzle_2017_1(puzzle_input):
 def find_total(puzzle_input, steps=1):
     total = 0
     steps = steps % (len(puzzle_input) - 1)
-    for i, digit in enumerate(puzzle_input):
+    for i, digit in zip(range(len(puzzle_input)-1), puzzle_input):
         to_compare_index = (i + steps) % (len(puzzle_input) - 1)
-        if digit == "\n" or digit == "\r":
-            break
-        elif digit == puzzle_input[to_compare_index]:
+        if digit == puzzle_input[to_compare_index]:
             total += int(digit)
     return total
 
