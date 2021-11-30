@@ -1,4 +1,4 @@
-import year_2017.day_01 as puzzle
+import year_2021.day_01 as puzzle
 
 
 def main():
