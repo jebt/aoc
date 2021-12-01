@@ -15,6 +15,7 @@ def solve():
 
     words = puzzle_input.split()
     print(words)
+    # numbers = [int(word) for word in words]
     # loop_over_input(words)
 
     part_one_answer = None

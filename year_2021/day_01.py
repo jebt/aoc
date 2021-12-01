@@ -14,20 +14,31 @@ def solve():
         puzzle_input = f.read()
 
     words = puzzle_input.split()
-    print(words)
-    # loop_over_input(words)
+    # print(words)
+    numbers = [int(word) for word in words]
 
-    part_one_answer = None
+    part_one_answer, part_two_answer = loop_over_input(numbers)
     print(f"part one answer: {part_one_answer}")
-
-    # PART TWO
-    part_two_answer = None
     print(f"part two answer: {part_two_answer}")
 
 
 def loop_over_input(words):
+    times_window_increased = 0
+    times_single_increased = 0
+    max_times_increased = 0
     for i, word in enumerate(words):
-        print(i, word)
+        if i < 1:
+            continue
+        elif i > 2 and (word + words[i-1] + words[i-2]) > (words[i-1] + words[i-2] + words[i-3]):
+            times_window_increased += 1
+            if times_window_increased > max_times_increased:
+                max_times_increased = times_window_increased
+        if word > words[i-1]:
+            times_single_increased += 1
+        else:
+            pass
+            # times_window_increased = 0
+    return times_single_increased, times_window_increased
 
 
 if __name__ == "__main__":
