@@ -3,26 +3,33 @@ import os
 part_one_answer, part_two_answer = None, None
 
 
+class Puzzle:
+    part_one_answer, part_two_answer = None, None
+
+    def solve(self):
+        global part_one_answer, part_two_answer
+        with open(f"{os.path.splitext(__file__)[0]}_input.txt") as f:
+            puzzle_input = f.read()
+
+        words = puzzle_input.split("\n")
+        # numbers = [int(word) for word in words]
+
+        part_one_answer, part_two_answer = loop_over_input(words)
+        self.part_one_answer = part_one_answer
+        self.part_two_answer = part_two_answer
+        # print(f"part one answer: {part_one_answer}")
+        # print(f"part two answer: {part_two_answer}")
+
+
 def main():
     solve()
 
 
 def solve():
-    global part_one_answer, part_two_answer
-    with open(f"{os.path.splitext(__file__)[0]}_input.txt") as f:
-        puzzle_input = f.read()
-
-    words = puzzle_input.split("\n")
-    # numbers = [int(word) for word in words]
-
-    part_one_answer, part_two_answer = loop_over_input(words)
-    print(f"part one answer: {part_one_answer}")
-    print(f"part two answer: {part_two_answer}")
+    pass
 
 
 def loop_over_input(words):
-    answer1 = None
-    answer2 = None
     straight = 0
     depth = 0
     depth2 = 0
@@ -32,7 +39,7 @@ def loop_over_input(words):
         command = word.split(" ")
         direction = command[0]
         amount = int(command[1])
-        print(f"{i}: {direction} {amount}")
+        # print(f"{i}: {direction} {amount}")
         if direction == "forward":
             straight += amount
             depth2 += (aim * amount)

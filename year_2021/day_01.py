@@ -1,25 +1,30 @@
 import os
 
 
-part_one_answer, part_two_answer = None, None
+class Puzzle:
+    part_one_answer, part_two_answer = None, None
+
+    def solve(self):
+        with open(f"{os.path.splitext(__file__)[0]}_input.txt") as f:
+            puzzle_input = f.read()
+
+        words = puzzle_input.split()
+        # print(words)
+        numbers = [int(word) for word in words]
+
+        part_one_answer, part_two_answer = loop_over_input(numbers)
+        self.part_one_answer = part_one_answer
+        self.part_two_answer = part_two_answer
+        # print(f"part one answer: {part_one_answer}")
+        # print(f"part two answer: {part_two_answer}")
 
 
 def main():
-    solve()
+    old_solve()
 
 
-def solve():
-    global part_one_answer, part_two_answer
-    with open(f"{os.path.splitext(__file__)[0]}_input.txt") as f:
-        puzzle_input = f.read()
-
-    words = puzzle_input.split()
-    # print(words)
-    numbers = [int(word) for word in words]
-
-    part_one_answer, part_two_answer = loop_over_input(numbers)
-    print(f"part one answer: {part_one_answer}")
-    print(f"part two answer: {part_two_answer}")
+def old_solve():
+    pass
 
 
 def loop_over_input(words):
