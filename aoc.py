@@ -1,22 +1,56 @@
-import year_2021.day_03 as day
+import year_2017.day_01 as day
 
 from os.path import splitext
 
 
-# todo: add sample input test with assert answer == sample answer
-# todo: command line args: year, day, all, default to today, else last available, use_sample
-# todo: dynamic import strings only the days needed for execution
-#  see: https://stackoverflow.com/questions/301134/how-to-import-a-module-given-its-name-as-string
-
-
 def main():
+    test_sample()
+    solve_puzzle()
+
+
+def solve_puzzle():
     with open(f"{splitext(day.__file__)[0]}_input.txt") as file:
         puzzle_input = file.read()
-    puzzle = day.Puzzle()
+    puzzle = day.Puzzle(use_sample_input=False)
     puzzle.puzzle_input = puzzle_input
     puzzle.solve()
-    print(f"Part 1 answer: {puzzle.part_one_answer}")
-    print(f"Part 2 answer: {puzzle.part_two_answer}")
+    if puzzle.part_one_correct_answer and puzzle.part_one_answer == puzzle.part_one_correct_answer:
+        print(f"Part 1 answer correct: {puzzle.part_one_answer}")
+    elif puzzle.part_one_correct_answer and puzzle.part_one_answer != puzzle.part_one_correct_answer:
+        print(f"Part 1 answer INCORRECT: got {puzzle.part_one_answer}, "
+              f"should be {puzzle.part_one_correct_answer}")
+    else:
+        print(f"Part 1 answer: {puzzle.part_one_answer}")
+
+    if puzzle.part_two_correct_answer and puzzle.part_two_answer == puzzle.part_two_correct_answer:
+        print(f"Part 2 answer correct: {puzzle.part_two_answer}")
+    elif puzzle.part_two_correct_answer and puzzle.part_two_answer != puzzle.part_two_correct_answer:
+        print(f"Part 2 answer INCORRECT: got {puzzle.part_two_answer}, "
+              f"should be {puzzle.part_two_correct_answer}")
+    else:
+        print(f"Part 2 answer: {puzzle.part_two_answer}")
+
+
+def test_sample():
+    puzzle = day.Puzzle(use_sample_input=True)
+    puzzle.solve()
+    if puzzle.part_one_sample_correct_answer and puzzle.part_one_answer == puzzle.part_one_sample_correct_answer:
+        print(f"Part 1 sample answer correct: {puzzle.part_one_answer}")
+    elif puzzle.part_one_sample_correct_answer and \
+            puzzle.part_one_answer != puzzle.part_one_sample_correct_answer:
+        print(f"Part 1 sample answer INCORRECT: got {puzzle.part_one_answer}, "
+              f"should be {puzzle.part_one_sample_correct_answer}")
+    else:
+        print(f"Part 1 sample answer: {puzzle.part_one_answer}")
+
+    if puzzle.part_two_sample_correct_answer and puzzle.part_two_answer == puzzle.part_two_sample_correct_answer:
+        print(f"Part 2 sample answer correct: {puzzle.part_two_answer}")
+    elif puzzle.part_two_sample_correct_answer and \
+            puzzle.part_two_answer != puzzle.part_two_sample_correct_answer:
+        print(f"Part 2 sample answer INCORRECT: got {puzzle.part_two_answer}, "
+              f"should be {puzzle.part_two_sample_correct_answer}")
+    else:
+        print(f"Part 2 sample answer: {puzzle.part_two_answer}")
 
 
 if __name__ == "__main__":
