@@ -1,5 +1,6 @@
 from base_puzzle import BasePuzzle
 
+
 class Puzzle(BasePuzzle):
     def __init__(self, use_sample_input=False):
         super().__init__()
