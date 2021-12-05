@@ -1,3 +1,4 @@
+import itertools
 from base_puzzle import BasePuzzle
 
 
@@ -25,112 +26,52 @@ class Puzzle(BasePuzzle):
         lines = puzzle_input.splitlines()
         grid = [[0 for _ in range(1000)] for _ in range(1000)]
 
-        # process_points(grid, lines)
-        process_horizontal_and_vertical(grid, lines)
+        # part one: only the horizontal and vertical lines
+        for i, line in enumerate(lines):
+            start_point, end_point = get_start_and_end_point(line)
+            if start_point[0] == end_point[0] or start_point[1] == end_point[1]:
+                draw_line(grid, start_point, end_point)
         answer1 = count_2_or_more(grid)
 
-        process_diagonal(grid, lines)
+        # part two: add the diagonal lines
+        for i, line in enumerate(lines):
+            start_point, end_point = get_start_and_end_point(line)
+            if start_point[0] != end_point[0] and start_point[1] != end_point[1]:
+                draw_line(grid, start_point, end_point)
         answer2 = count_2_or_more(grid)
 
         self.part_one_answer = answer1
         self.part_two_answer = answer2
 
 
-def draw_from_s_to_n(grid, start_point, end_point):
-    for i in range(start_point[1], end_point[1] + 1):
-        grid[start_point[0]][i] += 1
+def get_start_and_end_point(line):
+    parts = line.split(' -> ')
+    from_x, from_y = parts[0].split(',')
+    to_x, to_y = parts[1].split(',')
+    start_point = (int(from_x), int(from_y))
+    end_point = (int(to_x), int(to_y))
+    return start_point, end_point
 
 
-def draw_from_n_to_s(grid, start_point, end_point):
-    for i in range(start_point[1], end_point[1] - 1, -1):
-        grid[start_point[0]][i] += 1
+def draw_line(grid, start_point, end_point):
+    horizontal_range = inclusive_range(start_point[0], end_point[0])
+    vertical_range = inclusive_range(start_point[1], end_point[1])
+    fillvalue = None
+    if len(horizontal_range) == 1:
+        fillvalue = horizontal_range[0]
+    elif len(vertical_range) == 1:
+        fillvalue = vertical_range[0]
+    for x, y in itertools.zip_longest(horizontal_range, vertical_range, fillvalue=fillvalue):
+        grid[x][y] += 1
 
 
-def draw_from_w_to_e(grid, start_point, end_point):
-    for i in range(start_point[0], end_point[0] + 1):
-        grid[i][start_point[1]] += 1
-
-
-def draw_from_e_to_w(grid, start_point, end_point):
-    for i in range(start_point[0], end_point[0] - 1, -1):
-        grid[i][start_point[1]] += 1
-
-
-def draw_from_sw_to_ne(grid, start_point, end_point):
-    length = abs(end_point[0] - start_point[0])
-    for i in range(length+1):
-        grid[start_point[0] + i][start_point[1] + i] += 1
-
-
-def draw_from_se_to_nw(grid, start_point, end_point):
-    length = abs(end_point[0] - start_point[0])
-    for i in range(length+1):
-        grid[start_point[0] - i][start_point[1] + i] += 1
-
-
-def draw_from_nw_to_se(grid, start_point, end_point):
-    length = abs(end_point[0] - start_point[0])
-    for i in range(length+1):
-        grid[start_point[0] + i][start_point[1] - i] += 1
-
-
-def draw_from_ne_to_sw(grid, start_point, end_point):
-    length = abs(end_point[0] - start_point[0])
-    for i in range(length+1):
-        grid[start_point[0] - i][start_point[1] - i] += 1
-
-
-def process_points(grid, lines):
-    for i, line in enumerate(lines):
-        parts = line.split(' -> ')
-        from_x, from_y = parts[0].split(',')
-        to_x, to_y = parts[1].split(',')
-        start_point = (int(from_x), int(from_y))
-        end_point = (int(to_x), int(to_y))
-
-        if start_point[0] == end_point[0] and start_point[1] == end_point[1]:
-            grid[start_point[0]][start_point[1]] = 1
-
-
-def process_horizontal_and_vertical(grid, lines):
-    for i, line in enumerate(lines):
-        parts = line.split(' -> ')
-        from_x, from_y = parts[0].split(',')
-        to_x, to_y = parts[1].split(',')
-        start_point = (int(from_x), int(from_y))
-        end_point = (int(to_x), int(to_y))
-
-        # vertical
-        if start_point[0] == end_point[0]:
-            if start_point[1] < end_point[1]:
-                draw_from_s_to_n(grid, start_point, end_point)
-            if start_point[1] > end_point[1]:
-                draw_from_n_to_s(grid, start_point, end_point)
-
-        # horizontal
-        if start_point[1] == end_point[1]:
-            if start_point[0] < end_point[0]:
-                draw_from_w_to_e(grid, start_point, end_point)
-            if start_point[0] > end_point[0]:
-                draw_from_e_to_w(grid, start_point, end_point)
-
-
-def process_diagonal(grid, lines):
-    for i, line in enumerate(lines):
-        parts = line.split(' -> ')
-        from_x, from_y = parts[0].split(',')
-        to_x, to_y = parts[1].split(',')
-        start_point = (int(from_x), int(from_y))
-        end_point = (int(to_x), int(to_y))
-
-        if start_point[0] < end_point[0] and start_point[1] < end_point[1]:
-            draw_from_sw_to_ne(grid, start_point, end_point)
-        if start_point[0] > end_point[0] and start_point[1] < end_point[1]:
-            draw_from_se_to_nw(grid, start_point, end_point)
-        if start_point[0] < end_point[0] and start_point[1] > end_point[1]:
-            draw_from_nw_to_se(grid, start_point, end_point)
-        if start_point[0] > end_point[0] and start_point[1] > end_point[1]:
-            draw_from_ne_to_sw(grid, start_point, end_point)
+def inclusive_range(start, end):
+    if start == end:
+        return [start]
+    elif end > start:
+        return range(start, end + 1)
+    elif end < start:
+        return range(start, end - 1, -1)
 
 
 def count_2_or_more(grid):
