@@ -1,4 +1,5 @@
 import itertools
+
 from base_puzzle import BasePuzzle
 
 
@@ -23,28 +24,24 @@ class Puzzle(BasePuzzle):
 
     def solve(self):
         puzzle_input = self.sample_input if self.use_sample_input else self.puzzle_input
-        lines = puzzle_input.splitlines()
+        lines = [start_end(line) for line in puzzle_input.splitlines()]
         grid = [[0 for _ in range(1000)] for _ in range(1000)]
 
         # part one: only the horizontal and vertical lines
-        for i, line in enumerate(lines):
-            start_point, end_point = get_start_and_end_point(line)
-            if start_point[0] == end_point[0] or start_point[1] == end_point[1]:
-                draw_line(grid, start_point, end_point)
+        hor_ver_lines = list(filter(lambda line: line[0][0] == line[1][0] or line[0][1] == line[1][1], lines))
+        draw_lines(grid, hor_ver_lines)
         answer1 = count_2_or_more(grid)
 
         # part two: add the diagonal lines
-        for i, line in enumerate(lines):
-            start_point, end_point = get_start_and_end_point(line)
-            if start_point[0] != end_point[0] and start_point[1] != end_point[1]:
-                draw_line(grid, start_point, end_point)
+        diag_lines = [line for line in lines if line not in hor_ver_lines]
+        draw_lines(grid, diag_lines)
         answer2 = count_2_or_more(grid)
 
         self.part_one_answer = answer1
         self.part_two_answer = answer2
 
 
-def get_start_and_end_point(line):
+def start_end(line):
     parts = line.split(' -> ')
     from_x, from_y = parts[0].split(',')
     to_x, to_y = parts[1].split(',')
@@ -53,16 +50,18 @@ def get_start_and_end_point(line):
     return start_point, end_point
 
 
-def draw_line(grid, start_point, end_point):
-    horizontal_range = inclusive_range(start_point[0], end_point[0])
-    vertical_range = inclusive_range(start_point[1], end_point[1])
-    fillvalue = None
-    if len(horizontal_range) == 1:
-        fillvalue = horizontal_range[0]
-    elif len(vertical_range) == 1:
-        fillvalue = vertical_range[0]
-    for x, y in itertools.zip_longest(horizontal_range, vertical_range, fillvalue=fillvalue):
-        grid[x][y] += 1
+def draw_lines(grid, lines):
+    for line in lines:
+        start_point, end_point = line
+        horizontal_range = inclusive_range(start_point[0], end_point[0])
+        vertical_range = inclusive_range(start_point[1], end_point[1])
+        fillvalue = None
+        if len(horizontal_range) == 1:
+            fillvalue = horizontal_range[0]
+        elif len(vertical_range) == 1:
+            fillvalue = vertical_range[0]
+        for x, y in itertools.zip_longest(horizontal_range, vertical_range, fillvalue=fillvalue):
+            grid[x][y] += 1
 
 
 def inclusive_range(start, end):
