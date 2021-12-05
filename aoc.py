@@ -4,12 +4,14 @@ from os.path import splitext
 from os import listdir
 
 YEAR = 2021
+RUN_SAMPLE = True
+RUN_REAL = True
 
 
 def main():
     args = sys.argv[1:]
     if len(args) == 0:
-        print("No arguments given, running all puzzles")
+        print("No arguments given, running all puzzles...")
         run_all_puzzles()
     elif args[0] == "all":
         run_all_puzzles()
@@ -32,9 +34,7 @@ def main():
 
 def run_puzzle(puzzle_number):
     day = importlib.import_module(f"year_{YEAR}.day_{str(puzzle_number).zfill(2)}")
-    print(f"\n{day.__name__}")
-    test_sample(day)
-    solve_puzzle(day)
+    run_day_list([day])
 
 
 def run_all_puzzles():
@@ -45,8 +45,10 @@ def run_all_puzzles():
 def run_day_list(days):
     for day in days:
         print(f"\n{day.__name__}")
-        test_sample(day)
-        solve_puzzle(day)
+        if RUN_SAMPLE:
+            test_sample(day)
+        if RUN_REAL:
+            solve_puzzle(day)
 
 
 def get_all_days_as_modules():
