@@ -1,7 +1,8 @@
 from base_puzzle import BasePuzzle
 
+TIMER_AFTER_GIVING_BIRTH = 6
+TIMER_AFTER_BEING_BORN = 8
 
-# ans part 2 = estimated 49.178.108
 
 class Puzzle(BasePuzzle):
     def __init__(self, use_sample_input=False):
@@ -16,68 +17,26 @@ class Puzzle(BasePuzzle):
     def solve(self):
         puzzle_input = self.sample_input if self.use_sample_input else self.puzzle_input
         timers = [int(x) for x in puzzle_input.split(',')]
-
-        generations = 80
-        sums = [0 for _ in range(9)]
+        aggregated_timers = [0 for _ in range(TIMER_AFTER_BEING_BORN+1)]
         for timer in timers:
-            sums[timer] += 1
-        for gen in range(generations):
-            amount_of_0 = sums[0]
-            sums[0] = sums[1]
-            sums[1] = sums[2]
-            sums[2] = sums[3]
-            sums[3] = sums[4]
-            sums[4] = sums[5]
-            sums[5] = sums[6]
-            sums[6] = sums[7] + amount_of_0
-            sums[7] = sums[8]
-            sums[8] = amount_of_0
-        total = 0
-        for amount in sums:
-            total += amount
-        answer1 = total
+            aggregated_timers[timer] += 1
 
-        # for i in range(generations):
-        #     if i % 9 == 0:
-        #         print(len(timers))
-        #         print(len([t for t in timers if t <= 1]))
-        #     for j, timer in enumerate(timers):
-        #         timers[j] = timers[j] - 1
-        #         if timers[j] == -1:
-        #             timers[j] = 6
-        #             timers.append(9)
-
-        # timers = [int(x) for x in puzzle_input.split(',')]
-        # generations = 256
-        # for i in range(generations):
-        #     if i % 9 == 0:
-        #         print(f"{i=}, {len(timers)=}")
-        #         print(f"{len([t for t in timers if t <= 1])=}")
-        #     for j, timer in enumerate(timers):
-        #         timers[j] = timers[j] - 1
-        #         if timers[j] == -1:
-        #             timers[j] = 6
-        #             timers.append(9)
-
-        generations = 256
-        sums = [0 for _ in range(9)]
-        for timer in timers:
-            sums[timer] += 1
-        for gen in range(generations):
-            amount_of_0 = sums[0]
-            sums[0] = sums[1]
-            sums[1] = sums[2]
-            sums[2] = sums[3]
-            sums[3] = sums[4]
-            sums[4] = sums[5]
-            sums[5] = sums[6]
-            sums[6] = sums[7] + amount_of_0
-            sums[7] = sums[8]
-            sums[8] = amount_of_0
-        total = 0
-        for amount in sums:
-            total += amount
-        answer2 = total
+        answer1 = calculate_amount_of_fish(aggregated_timers, generations=80)
+        answer2 = calculate_amount_of_fish(aggregated_timers, generations=256)
 
         self.part_one_answer = answer1
         self.part_two_answer = answer2
+
+
+def calculate_amount_of_fish(input_timers, generations):
+    aggregated_timers = input_timers.copy()
+    for _ in range(generations):
+        timers_on_zero = aggregated_timers[0]
+        for i, timers in enumerate(aggregated_timers[:-1]):
+            aggregated_timers[i] = aggregated_timers[i + 1]
+        aggregated_timers[TIMER_AFTER_GIVING_BIRTH] += timers_on_zero
+        aggregated_timers[TIMER_AFTER_BEING_BORN] = timers_on_zero
+    total = 0
+    for timer in aggregated_timers:
+        total += timer
+    return total
