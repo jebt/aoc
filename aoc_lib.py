@@ -1,0 +1,78 @@
+import importlib
+from os.path import splitext
+from os import listdir
+
+
+def run_puzzle(year, puzzle_number, run_sample=True, run_real=True):
+    day = importlib.import_module(f"year_{year}.day_{str(puzzle_number).zfill(2)}")
+    run_day_list([day], run_sample, run_real)
+
+
+def run_all_puzzles(year, run_sample=True, run_real=True):
+    days = get_all_days_as_modules(year)
+    run_day_list(days, run_sample, run_real)
+
+
+def run_day_list(days, run_sample=True, run_real=True):
+    for day in days:
+        print(f"\n{day.__name__}")
+        if run_sample:
+            test_sample(day)
+        if run_real:
+            solve_puzzle(day)
+
+
+def get_all_days_as_modules(year):
+    days = []
+    for file in listdir(f"./year_{year}"):
+        if splitext(file)[1] == ".py" and file.startswith("day_"):
+            days.append(importlib.import_module(f"year_{year}.{file[:-3]}"))
+            print(f"Imported year_{year}.{file[:-3]}")
+    return days
+
+
+def test_sample(day):
+    puzzle_constructor = getattr(day, "Puzzle")
+    puzzle = puzzle_constructor(use_sample_input=True)
+    puzzle.solve()
+    if puzzle.part_one_sample_correct_answer and puzzle.part_one_answer == puzzle.part_one_sample_correct_answer:
+        print(f"Part 1 sample answer correct: {puzzle.part_one_answer}")
+    elif puzzle.part_one_sample_correct_answer and \
+            puzzle.part_one_answer != puzzle.part_one_sample_correct_answer:
+        print(f"Part 1 sample answer INCORRECT: got {puzzle.part_one_answer}, "
+              f"should be {puzzle.part_one_sample_correct_answer}")
+    elif puzzle.part_one_answer:
+        print(f"Part 1 sample answer: {puzzle.part_one_answer}")
+
+    if puzzle.part_two_sample_correct_answer and puzzle.part_two_answer == puzzle.part_two_sample_correct_answer:
+        print(f"Part 2 sample answer correct: {puzzle.part_two_answer}")
+    elif puzzle.part_two_sample_correct_answer and \
+            puzzle.part_two_answer != puzzle.part_two_sample_correct_answer:
+        print(f"Part 2 sample answer INCORRECT: got {puzzle.part_two_answer}, "
+              f"should be {puzzle.part_two_sample_correct_answer}")
+    elif puzzle.part_two_answer:
+        print(f"Part 2 sample answer: {puzzle.part_two_answer}")
+
+
+def solve_puzzle(day):
+    with open(f"{splitext(day.__file__)[0]}_input.txt") as file:
+        puzzle_input = file.read()
+    puzzle_constructor = getattr(day, "Puzzle")
+    puzzle = puzzle_constructor(use_sample_input=False)
+    puzzle.puzzle_input = puzzle_input
+    puzzle.solve()
+    if puzzle.part_one_correct_answer and puzzle.part_one_answer == puzzle.part_one_correct_answer:
+        print(f"Part 1 answer correct: {puzzle.part_one_answer}")
+    elif puzzle.part_one_correct_answer and puzzle.part_one_answer != puzzle.part_one_correct_answer:
+        print(f"Part 1 answer INCORRECT: got {puzzle.part_one_answer}, "
+              f"should be {puzzle.part_one_correct_answer}")
+    elif puzzle.part_one_answer:
+        print(f"Part 1 answer: {puzzle.part_one_answer}")
+
+    if puzzle.part_two_correct_answer and puzzle.part_two_answer == puzzle.part_two_correct_answer:
+        print(f"Part 2 answer correct: {puzzle.part_two_answer}")
+    elif puzzle.part_two_correct_answer and puzzle.part_two_answer != puzzle.part_two_correct_answer:
+        print(f"Part 2 answer INCORRECT: got {puzzle.part_two_answer}, "
+              f"should be {puzzle.part_two_correct_answer}")
+    elif puzzle.part_two_answer:
+        print(f"Part 2 answer: {puzzle.part_two_answer}")
