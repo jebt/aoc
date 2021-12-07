@@ -10,16 +10,20 @@ def run_puzzle(year, puzzle_number, run_sample=True, run_real=True):
 
 def run_all_puzzles(year, run_sample=True, run_real=True):
     days = get_all_days_as_modules(year)
-    run_day_list(days, run_sample, run_real)
+    error_count = run_day_list(days, run_sample, run_real)
+    if error_count > 0:
+        print(f"\nWARNING: At least 1 answer was INCORRECT! {error_count=}")
 
 
 def run_day_list(days, run_sample=True, run_real=True):
+    error_count = 0
     for day in days:
         print(f"\n{day.__name__}")
         if run_sample:
-            test_sample(day)
+            error_count += test_sample(day)
         if run_real:
-            solve_puzzle(day)
+            error_count += solve_puzzle(day)
+    return error_count
 
 
 def get_all_days_as_modules(year):
@@ -32,6 +36,7 @@ def get_all_days_as_modules(year):
 
 
 def test_sample(day):
+    error_count = 0
     puzzle_constructor = getattr(day, "Puzzle")
     puzzle = puzzle_constructor(use_sample_input=True)
     puzzle.solve()
@@ -41,6 +46,7 @@ def test_sample(day):
             puzzle.part_one_answer != puzzle.part_one_sample_correct_answer:
         print(f"Part 1 sample answer INCORRECT: got {puzzle.part_one_answer}, "
               f"should be {puzzle.part_one_sample_correct_answer}")
+        error_count += 1
     elif puzzle.part_one_answer:
         print(f"Part 1 sample answer: {puzzle.part_one_answer}")
 
@@ -50,11 +56,14 @@ def test_sample(day):
             puzzle.part_two_answer != puzzle.part_two_sample_correct_answer:
         print(f"Part 2 sample answer INCORRECT: got {puzzle.part_two_answer}, "
               f"should be {puzzle.part_two_sample_correct_answer}")
+        error_count += 1
     elif puzzle.part_two_answer:
         print(f"Part 2 sample answer: {puzzle.part_two_answer}")
+    return error_count
 
 
 def solve_puzzle(day):
+    error_count = 0
     with open(f"{splitext(day.__file__)[0]}_input.txt") as file:
         puzzle_input = file.read()
     puzzle_constructor = getattr(day, "Puzzle")
@@ -66,6 +75,7 @@ def solve_puzzle(day):
     elif puzzle.part_one_correct_answer and puzzle.part_one_answer != puzzle.part_one_correct_answer:
         print(f"Part 1 answer INCORRECT: got {puzzle.part_one_answer}, "
               f"should be {puzzle.part_one_correct_answer}")
+        error_count += 1
     elif puzzle.part_one_answer:
         print(f"Part 1 answer: {puzzle.part_one_answer}")
 
@@ -74,5 +84,7 @@ def solve_puzzle(day):
     elif puzzle.part_two_correct_answer and puzzle.part_two_answer != puzzle.part_two_correct_answer:
         print(f"Part 2 answer INCORRECT: got {puzzle.part_two_answer}, "
               f"should be {puzzle.part_two_correct_answer}")
+        error_count += 1
     elif puzzle.part_two_answer:
         print(f"Part 2 answer: {puzzle.part_two_answer}")
+    return error_count

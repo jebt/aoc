@@ -13,7 +13,7 @@ def main():
         print("No arguments given, running all puzzles...")
         run_all_puzzles(YEAR, RUN_SAMPLE, RUN_REAL)
     elif args[0] == "all":
-        run_all_puzzles(YEAR)
+        run_all_puzzles(YEAR, RUN_SAMPLE, RUN_REAL)
     elif args[0] == "today":
         from datetime import date
         day = date.today().day
