@@ -4,6 +4,7 @@ from base_puzzle import BasePuzzle
 class Puzzle(BasePuzzle):
     def __init__(self, use_sample_input=False):
         super().__init__()
+        # noinspection SpellCheckingInspection
         self.sample_input = """sample line 1
 sample line 2
 sample line 3"""

@@ -1,0 +1,8 @@
+optimizing day 7:
+    original solution:
+        Time in seconds to calculate the fuel cost in part two: 58.60893629999191
+    added break when fuel cost exceeds the lowest option so far:
+        Time in seconds to calculate the fuel cost in part two: 24.388494500002707
+
+    added memoization hashmap with key distance and value fuel_cost:
+        Time in seconds to calculate the fuel cost in part two: 0.4660009999934118
