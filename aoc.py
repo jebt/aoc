@@ -1,3 +1,5 @@
+# todo: add performance timer
+
 from aoc_lib import *
 import sys
 
