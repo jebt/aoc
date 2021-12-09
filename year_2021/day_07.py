@@ -34,10 +34,7 @@ class Puzzle(BasePuzzle):
                 lowest_difference = fuel_cost
 
         def apply_weight(value):
-            result = 0
-            for index in range(value):
-                result = result + value - index
-            return result
+            return value * (value + 1) // 2
 
         # same as above but the difference is weighted heavier for values that are farther away from the range that
         # it is compared to. Each integer step 1 more.

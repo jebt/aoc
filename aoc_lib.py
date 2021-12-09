@@ -1,28 +1,51 @@
 import importlib
 from os.path import splitext
 from os import listdir
+from time import perf_counter
 
 
-def run_puzzle(year, puzzle_number, run_sample=True, run_real=True):
+def run_puzzle(year, puzzle_number, run_sample=True, run_real=True, timer=False):
     day = importlib.import_module(f"year_{year}.day_{str(puzzle_number).zfill(2)}")
-    run_day_list([day], run_sample, run_real)
+    run_day_list([day], run_sample, run_real, timer=timer)
 
 
-def run_all_puzzles(year, run_sample=True, run_real=True):
+def run_all_puzzles(year, run_sample=True, run_real=True, timer=False):
     days = get_all_days_as_modules(year)
-    error_count = run_day_list(days, run_sample, run_real)
+    error_count = run_day_list(days, run_sample, run_real, timer=timer)
     if error_count > 0:
         print(f"\nWARNING: At least 1 answer was INCORRECT! {error_count=}")
 
 
-def run_day_list(days, run_sample=True, run_real=True):
+def run_day_list(days, run_sample=True, run_real=True, timer=False):
+    start_time_day = None
+    start_time_all = None
+    day_to_time = {}
+    if timer:
+        start_time_all = perf_counter()
     error_count = 0
     for day in days:
         print(f"\n{day.__name__}")
         if run_sample:
             error_count += test_sample(day)
         if run_real:
+            if timer:
+                start_time_day = perf_counter()
             error_count += solve_puzzle(day)
+            if timer:
+                took = perf_counter() - start_time_day
+                day_to_time[day.__name__] = took
+                print(f"Day {day.__name__} took {took:.3f} seconds")
+    if timer:
+        if len(day_to_time) > 1:
+            print(f"\nAll puzzles together took {perf_counter() - start_time_all:.3f} seconds")
+            print(f"Average time per day: {sum(day_to_time.values()) / len(day_to_time):.3f} seconds")
+            time_list = sorted(day_to_time.items(), key=lambda x: x[1])
+            time_list = time_list[::-1]
+            if len(time_list) > 3:
+                print(f"Top 3 slowest days:")
+                for day, time in time_list[:3]:
+                    print(f"{day} took {time:.3f} seconds")
+
     return error_count
 
 
