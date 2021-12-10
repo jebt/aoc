@@ -5,7 +5,7 @@ import sys
 YEAR = 2021
 RUN_SAMPLE = True
 RUN_REAL = True
-TIMER = True
+TIMER = False
 
 
 def main():

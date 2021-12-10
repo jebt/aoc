@@ -24,7 +24,7 @@ class Puzzle(BasePuzzle):
         grid = [[[int(x), False, None, False, False, False, False] for x in line] for line in lines]
         for i in range(len(grid)):
             grid[i][0][5] = True  # left
-            grid[i][len([grid[0]]) - 2][6] = True  # right
+            grid[i][-1][6] = True  # right
 
         for i in range(len(grid[0])):
             grid[0][i][3] = True  # top
