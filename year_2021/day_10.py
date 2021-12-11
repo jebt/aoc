@@ -38,7 +38,7 @@ class Puzzle(BasePuzzle):
         self.part_one_sample_correct_answer = 26397
         self.part_two_sample_correct_answer = 288957
         self.part_one_correct_answer = 315693
-        self.part_two_correct_answer = None
+        self.part_two_correct_answer = 1870887234
         self.use_sample_input = use_sample_input
 
     def solve(self):
