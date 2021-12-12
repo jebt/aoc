@@ -17,14 +17,13 @@ class Puzzle(BasePuzzle):
 5283751526"""
         self.part_one_sample_correct_answer = 1656
         self.part_two_sample_correct_answer = 195
-        self.part_one_correct_answer = None
-        self.part_two_correct_answer = None
+        self.part_one_correct_answer = 1571
+        self.part_two_correct_answer = 387
         self.use_sample_input = use_sample_input
 
     def solve(self):
         puzzle_input = self.sample_input if self.use_sample_input else self.puzzle_input
-        lines = puzzle_input.splitlines()
-        grid = [[int(x) for x in line] for line in lines]
+        grid = [[int(x) for x in line] for line in puzzle_input.splitlines()]
 
         flash_count = 0
         step_nr = 0
@@ -32,7 +31,6 @@ class Puzzle(BasePuzzle):
         while not all_flashed_simultaneously(grid):
             flash_count += step(grid)
             step_nr += 1
-            # print(step_nr)
             if step_nr == 100:
                 answer1 = flash_count
 
