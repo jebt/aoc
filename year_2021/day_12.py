@@ -1,5 +1,6 @@
 from base_puzzle import BasePuzzle
 import networkx as nx
+# todo: DFS, instead of BFS with a single queue (popping after the recursive call to undo the changes)
 
 
 class Puzzle(BasePuzzle):
@@ -16,7 +17,7 @@ b-end"""
         self.part_one_sample_correct_answer = 10
         self.part_two_sample_correct_answer = 36
         self.part_one_correct_answer = 5076
-        self.part_two_correct_answer = None
+        self.part_two_correct_answer = 145643
         self.use_sample_input = use_sample_input
 
     def solve(self):
@@ -39,47 +40,45 @@ b-end"""
                 return 0
             if start == 'end':
                 path_so_far.append(start)
-                paths_list.append(path_so_far)
+                paths.append(path_so_far)
                 return 1
             if start.islower():
                 visited.add(start)
-            paths = 0
+            path_count = 0
             for node in g.neighbors(start):
-                paths += find_paths(graph, node, end, visited.copy(), path_so_far + [start])
-            return paths
+                path_count += find_paths(graph, node, end, visited.copy(), path_so_far + [start])
+            return path_count
 
         # The same as the function above except this time a single lowercase cave is allowed to be visited twice.
         # The start and end caves are still only allowed to be visited once.
-        def find_paths_twice(graph, start, end, visited=None, path_so_far=None):
-            second_time = False
+        def find_paths2(graph, start, end, visited_lower_case_caves=None, path_so_far=None):
             if path_so_far is None:
                 path_so_far = []
-            if visited is None:
-                visited = set()
-            if start in visited:
-                second_time = True
-                if start == 'start' or start == 'end':
+            if visited_lower_case_caves is None:
+                visited_lower_case_caves = set()
+            if start in visited_lower_case_caves:
+                if "a_lower_case_cave_for_the_second_time" in visited_lower_case_caves or start in ["start", "end"]:
                     return 0
-                if "2" in visited:
-                    return 0
+                second_time_in_lower_case_cave = True
+            else:
+                second_time_in_lower_case_cave = False
             if start == 'end':
                 path_so_far.append(start)
-                paths_list.append(path_so_far)
+                paths.append(path_so_far)
                 return 1
             if start.islower():
-                if not second_time:
-                    visited.add(start)
+                if not second_time_in_lower_case_cave:
+                    visited_lower_case_caves.add(start)
                 else:
-                    visited.add("2")
-            paths = 0
+                    visited_lower_case_caves.add("a_lower_case_cave_for_the_second_time")
+            path_count = 0
             for node in g.neighbors(start):
-                paths += find_paths_twice(graph, node, end, visited.copy(), path_so_far + [start])
-            return paths
+                path_count += find_paths2(graph, node, end, visited_lower_case_caves.copy(), path_so_far + [start])
+            return path_count
 
-        paths_list = []
+        paths = []
         answer1 = find_paths(g, 'start', 'end')
-        answer2 = find_paths_twice(g, 'start', 'end')
+        answer2 = find_paths2(g, 'start', 'end')
 
         self.part_one_answer = answer1
         self.part_two_answer = answer2
-
