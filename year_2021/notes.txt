@@ -6,3 +6,8 @@ optimizing day 7:
 
     added memoization hashmap with key distance and value fuel_cost:
         Time in seconds to calculate the fuel cost in part two: 0.4660009999934118
+
+
+
+MISTAKE ON AOC.COM??
+This polymer grows quickly. After step 5, it has length 97; After step 10, it has length 3073. After step 10, B occurs 1749 times, C occurs 298 times, H occurs 191 times, and N occurs 865 times; taking the quantity of the most common element (B, 1749) and subtracting the quantity of the least common element (H, 161) produces 1749 - 161 = 1588.
