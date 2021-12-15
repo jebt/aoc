@@ -39,8 +39,6 @@ CN -> C"""
         polymer = starting_polymer
 
         for step in range(10):
-            # print(get_pair_histogram(polymer))
-            # print(step)
             staged_insertions: [[int, str]] = []
             for i, pair in enumerate(more_itertools.windowed(polymer, 2)):
                 pair = "".join(pair)
